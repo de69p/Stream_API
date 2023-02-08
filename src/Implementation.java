@@ -25,10 +25,11 @@ public class Implementation {
      * - ціна
      * 1.2 Реалізувати метод отримання всіх продуктів у вигляді списку, категорія яких еквівалентна “Book” та ціна більш ніж 250
      */
-    public void prod1() {
+    public List<Product> prod1() {
         productList.stream()
-                .filter(product -> Objects.equals(product.getType(), "Book") && product.getPrice() > 250)
+                .filter(product -> product.getType().equals("Book") && product.getPrice() > 250)
                 .forEach(System.out::println);
+        return productList;
     }
 
     /**
@@ -39,12 +40,13 @@ public class Implementation {
      * 2.2 Реалізувати метод отримання всіх продуктів як списку, категорія яких еквівалентна “Book” і з можливістю застосування знижки. Фінальний список повинен містити продукти з застосованою знижкою 10%.
      * Так, якщо Продукт A був з ціною 1.0 USD, то його фінальна ціна залишатиметься 0.9 USD
      */
-    public void prod2() {
+    public List<Product> prod2() {
         productList.stream().filter(product -> product.getType()
                         .equals("Book") && product.getDiscount()
                         .equals("discount"))
                 .map(product -> product.getPrice() * 0.9)
                 .forEach(product -> System.out.println("Discounted price of the book = " + product + " c.u."));
+        return productList;
     }
 
     /**
@@ -55,11 +57,14 @@ public class Implementation {
      * 3.2 Реалізувати метод отримання найдешевшого продукту з категорії “Book”
      * 3.3 У випадку, якщо жоден продукт не знайдено (ситуація, коли немає продукту з категорією), викинути виняток з повідомленням “Продукт [категорія: ім'я_категорії] не знайдено”
      */
-    public void prod3() {
+    public Product prod3() {
         Product min = productList.stream()
-                .filter(product -> product.getType().equals("Book"))
-                .min((a, b) -> a.getPrice() - b.getPrice()).get();
+                .filter(product -> product.getType()
+                        .equals("Book"))
+                .min(Comparator.comparingInt(Product::getPrice))
+                .get();
         System.out.println(min);
+        return min;
     }
 
     /**
@@ -70,10 +75,14 @@ public class Implementation {
      * - дата додавання (можна використовувати тип даних java.time.LocalDate, java.time.LocalDateTime або java.util.Date)
      * 4.2 Реалізувати метод отримання трьох останніх доданих продуктів
      */
-    public void prod4() {
-        Comparator<Product> nameComparator = (h1, h2) -> h1.getDateOfAddition().compareTo(h2.getDateOfAddition());
-        List<Product> lastAdded = productList.stream().sorted(nameComparator).limit(3).toList();
+    public List<Product> prod4() {
+        Comparator<Product> nameComparator = Comparator.comparing(Product::getDateOfAddition);
+        List<Product> lastAdded = productList.stream()
+                .sorted(nameComparator)
+                .limit(3)
+                .toList();
         System.out.println("Last Added = " + lastAdded);
+        return lastAdded;
     }
 
     /**
@@ -87,16 +96,19 @@ public class Implementation {
      * - продукт має тип “Book”
      * - ціна продукту не перевищує 75
      */
-    public void prod5() {
-        productList.stream().filter(product -> product.getType()
+    public List<Product> prod5() {
+        List<Product> newProductlist = productList;
+                newProductlist.stream()
+                        .filter(product -> product.getType()
                         .equals("Book") && product.getPrice() <= 75 && product.getDateOfAddition().getYear() == 2023)
                 .forEach(System.out::println);
-        double avg = productList.stream().filter(product -> product.getType()
+        double avg = newProductlist.stream().filter(product -> product.getType()
                         .equals("Book") && product.getPrice() <= 75 && product.getDateOfAddition().getYear() == 2023)
                 .mapToInt(Product::getPrice)
                 .average()
                 .orElse(0);
         System.out.println("Average = " + avg);
+        return newProductlist;
     }
 
     /**
@@ -121,5 +133,7 @@ public class Implementation {
             }
             System.out.println();
         }
+
     }
+
 }

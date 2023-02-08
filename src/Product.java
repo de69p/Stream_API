@@ -2,6 +2,11 @@ import java.time.LocalDate;
 
 public class Product {
 
+    String type;
+    String discount;
+    public int identificationNumber;
+    public int price;
+    public LocalDate dateOfAddition;
     public Product(String type, int price, String discount, LocalDate dateOfAddition, int identificationNumber) {
         this.type = type;
         this.price = price;
@@ -9,13 +14,6 @@ public class Product {
         this.dateOfAddition = dateOfAddition;
         this.identificationNumber = identificationNumber;
     }
-
-    String type;
-    int price;
-    String discount;
-    LocalDate dateOfAddition;
-    int identificationNumber;
-    LocalDate year = LocalDate.now();
 
     public String getType() {
         return type;
